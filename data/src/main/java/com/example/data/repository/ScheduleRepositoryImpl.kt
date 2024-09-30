@@ -10,4 +10,5 @@ class ScheduleRepositoryImpl(
     override suspend fun getSchedule(): Schedule {
         return api.get().toDomain()
     }
+
 }

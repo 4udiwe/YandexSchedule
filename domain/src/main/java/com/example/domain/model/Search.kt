@@ -1,10 +1,10 @@
 package com.example.domain.model
 
 
-data class Search(
+data class Search (
 
-    var date: String? = null,
-    var to: To? = To(),
-    var from: From? = From()
+    var from : From? = From(),
+    var to   : To?   = To(),
+    var date : String?  = null
 
 )

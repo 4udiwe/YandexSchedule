@@ -1,10 +1,10 @@
 package com.example.domain.model
 
 
-data class Pagination(
+data class Pagination (
 
-    var total: Int? = null,
-    var limit: Int? = null,
-    var offset: Int? = null
+    var total  : Int? = null,
+    var limit  : Int? = null,
+    var offset : Int? = null
 
 )

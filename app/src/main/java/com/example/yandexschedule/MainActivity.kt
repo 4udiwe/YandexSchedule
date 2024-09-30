@@ -25,9 +25,7 @@ class MainActivity : ComponentActivity() {
             YandexScheduleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     innerPadding
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                        Text(text = vm.schedule.value.toString())
-                    }
+
 
                 }
             }

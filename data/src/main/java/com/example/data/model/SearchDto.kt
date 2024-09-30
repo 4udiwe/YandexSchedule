@@ -5,12 +5,12 @@ import com.example.domain.model.Search
 import com.google.gson.annotations.SerializedName
 
 
-data class SearchDto(
+data class SearchDto (
 
-    @SerializedName("date") var date: String? = null,
-    @SerializedName("to") var to: ToDto? = ToDto(),
-    @SerializedName("from") var from: FromDto? = FromDto()
+    @SerializedName("from" ) var from : FromDto? = FromDto(),
+    @SerializedName("to"   ) var to   : ToDto?   = ToDto(),
+    @SerializedName("date" ) var date : String?  = null
 
-) {
-    fun toDomain(): Search = Search(date, to?.toDomain(), from?.toDomain())
+){
+    fun toDomain(): Search = Search(from?.toDomain(), to?.toDomain(), date)
 }

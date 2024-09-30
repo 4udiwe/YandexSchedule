@@ -1,17 +1,21 @@
 package com.example.data.model
 
+
 import com.example.domain.model.Schedule
 import com.google.gson.annotations.SerializedName
 
 
-data class ScheduleDto(
+data class ScheduleDto (
 
-    @SerializedName("pagination") var pagination: PaginationDto? = PaginationDto(),
-    @SerializedName("interval_segments") var intervalSegments: ArrayList<IntervalSegmentsDto> = arrayListOf(),
-    @SerializedName("segments") var segments: ArrayList<SegmentsDto> = arrayListOf(),
-    @SerializedName("search") var search: SearchDto? = SearchDto()
+  @SerializedName("search"            ) var search           : SearchDto?             = SearchDto(),
+  @SerializedName("segments"          ) var segments         : ArrayList<SegmentsDto> = arrayListOf(),
+  @SerializedName("interval_segments" ) var intervalSegments : ArrayList<String>      = arrayListOf(),
+  @SerializedName("pagination"        ) var pagination       : PaginationDto?         = PaginationDto()
 
 ) {
-    fun toDomain(): Schedule =
-        Schedule(pagination?.toDomain(), intervalSegments.map { it.toDomain() } as ArrayList)
+  fun toDomain(): Schedule = Schedule(
+    search?.toDomain(),
+    segments.map { it.toDomain() } as ArrayList,
+    intervalSegments,
+    pagination?.toDomain())
 }

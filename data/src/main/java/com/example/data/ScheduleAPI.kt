@@ -2,7 +2,6 @@ package com.example.data
 
 import com.example.data.model.ScheduleDto
 import retrofit2.http.GET
-import retrofit2.http.Part
 
 interface ScheduleAPI {
 

@@ -1,10 +1,10 @@
 package com.example.domain.model
 
 
-data class Codes(
+data class Codes (
 
-    var icao: String? = null,
-    var sirena: String? = null,
-    var iata: String? = null
+    var sirena : String? = null,
+    var iata   : String? = null,
+    var icao   : String? = null
 
 )

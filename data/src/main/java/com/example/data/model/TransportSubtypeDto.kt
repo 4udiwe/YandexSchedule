@@ -4,12 +4,12 @@ import com.example.domain.model.TransportSubtype
 import com.google.gson.annotations.SerializedName
 
 
-data class TransportSubtypeDto(
+data class TransportSubtypeDto (
 
-    @SerializedName("color") var color: String? = null,
-    @SerializedName("code") var code: String? = null,
-    @SerializedName("title") var title: String? = null
+  @SerializedName("title" ) var title : String? = null,
+  @SerializedName("code"  ) var code  : String? = null,
+  @SerializedName("color" ) var color : String? = null
 
-) {
-    fun toDomain(): TransportSubtype = TransportSubtype(color, code, title)
+){
+  fun toDomain() : TransportSubtype = TransportSubtype(title, code, color)
 }
