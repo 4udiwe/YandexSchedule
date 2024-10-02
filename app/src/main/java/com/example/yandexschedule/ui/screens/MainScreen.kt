@@ -1,5 +1,6 @@
 package com.example.yandexschedule.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
@@ -64,11 +67,14 @@ fun MainScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues).padding(horizontal = 4.dp),
+            .padding(paddingValues)
+            .padding(horizontal = 4.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().fillMaxHeight(0.65f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.65f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -78,11 +84,13 @@ fun MainScreen(
                         Text(text = "Найдите ваш маршрут", fontSize = 22.sp, color = Color.Gray)
                     }
                 }
+
                 0 -> {
                     item {
                         Text(text = "Ничего не найдено", fontSize = 22.sp, color = Color.Gray)
                     }
                 }
+
                 else -> {
                     items(schedule.value.segments) {
                         SegmentItem(it)
@@ -247,7 +255,6 @@ fun MainScreen(
                             disabledContentColor = Color.LightGray,
                             disabledContainerColor = Color.DarkGray,
                         )
-
                     else
                         ButtonColors(
                             contentColor = Color.DarkGray,
@@ -272,7 +279,6 @@ fun MainScreen(
                             disabledContentColor = Color.LightGray,
                             disabledContainerColor = Color.DarkGray,
                         )
-
                     else
                         ButtonColors(
                             contentColor = Color.DarkGray,
@@ -297,7 +303,6 @@ fun MainScreen(
                             disabledContentColor = Color.LightGray,
                             disabledContainerColor = Color.DarkGray,
                         )
-
                     else
                         ButtonColors(
                             contentColor = Color.DarkGray,
@@ -322,7 +327,6 @@ fun MainScreen(
                             disabledContentColor = Color.LightGray,
                             disabledContainerColor = Color.DarkGray,
                         )
-
                     else
                         ButtonColors(
                             contentColor = Color.DarkGray,
@@ -364,25 +368,46 @@ fun MainScreen(
     }
 }
 
+@Preview(showBackground = true)
 @Composable
 fun SegmentItem(
     segment: Segments = Segments()
 ) {
-    Row(
+    Column(
         modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(0.4f)
-        ) {
-            Text(text = segment.thread?.title.toString(), maxLines = 3)
-            val subtype = segment.thread?.transportSubtype
-            if (subtype?.title != null) {
-                Text(text = subtype.title!!, maxLines = 1)
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(
+                modifier = Modifier.padding(end = 8.dp),
+                tint = Color(252, 200, 3),
+                painter =
+                when (segment.thread?.transportType) {
+                    "train" -> painterResource(id = R.drawable.baseline_train_24)
+                    "plane" -> painterResource(id = R.drawable.baseline_airplanemode_active_24)
+                    "water" -> painterResource(id = R.drawable.baseline_directions_boat_24)
+                    "bus" -> painterResource(id = R.drawable.baseline_directions_bus_24)
+                    else -> painterResource(id = R.drawable.outline_sync_24)
+                },
+                contentDescription = "type",
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = segment.thread?.title.toString(), maxLines = 3)
+                val subtype = segment.thread?.transportSubtype
+                if (subtype?.title != null) {
+                    Text(
+                        text = subtype.title!!,
+                        maxLines = 1,
+                        modifier = Modifier.padding(start = 20.dp)
+                    )
+                }
+                Text(text = segment.startDate.toString(), fontSize = 12.sp, color = Color.Gray)
             }
-            Text(text = segment.startDate.toString(), fontSize = 12.sp, color = Color.Gray)
         }
 
         Row(
@@ -390,15 +415,15 @@ fun SegmentItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
-                modifier = Modifier.width(100.dp)
+                modifier = Modifier.width(130.dp)
             ) {
                 Text(
-                    text = segment.departure?.takeLast(8)?.dropLast(3).toString(),
+                    text = segment.departure?.substring(11, 16).toString(),
                     fontSize = 20.sp
                 )
                 Text(
                     text = segment.from?.title?.replace('-', ' ').toString(),
-                    maxLines = 2,
+                    maxLines = 4,
                     fontSize = 12.sp
                 )
                 Text(
@@ -410,22 +435,52 @@ fun SegmentItem(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                var duration = segment.duration
+                val duration = segment.duration
                 if (duration != null) {
                     Text(text = "В пути:", fontSize = 10.sp, color = Color.Gray)
-                    duration /= 60
 
-                    Text(text = if (duration > 60) "${duration / 60}:${duration % 60}" else duration.toString())
+                    val mins = duration / 60 % 60
+                    val hours = duration / 60 / 60 % 24
+                    val days = duration / 60 / 60 / 24
+
+                    Text(
+                        textAlign = TextAlign.Center,
+                        text =
+                        if (days > 0)
+                            "$days ${
+                                when (days){
+                                    1 -> "день\n"
+                                    in 2..4 -> "дня\n"
+                                    else -> "дней\n"
+                                }
+                            }$hours ${
+                                when (hours){
+                                    1 -> "час\n"
+                                    in 2..4 -> "часа\n"
+                                    else -> "часов\n"
+                                }
+                            }${if(mins > 0) "$mins минут" else ""}"
+                        else if (hours > 0)
+                            "$hours ${
+                                when (hours){
+                                    1 -> "час\n"
+                                    in 2..4 -> "часа\n"
+                                    else -> "часов\n"
+                                }
+                            }${if(mins > 0) "$mins минут" else ""}"
+                        else
+                            "$mins минут"
+                    )
                 }
             }
             Column(
-                modifier = Modifier.width(100.dp),
+                modifier = Modifier.width(130.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                Text(text = segment.arrival?.takeLast(8)?.dropLast(3).toString(), fontSize = 20.sp)
+                Text(text = segment.arrival?.substring(11, 16).toString(), fontSize = 20.sp)
                 Text(
                     text = segment.to?.title.toString(),
-                    maxLines = 2,
+                    maxLines = 4,
                     textAlign = TextAlign.End,
                     fontSize = 12.sp
                 )
