@@ -6,8 +6,7 @@ import com.example.domain.repository.ScheduleRepository
 class GetScheduleUseCase (
     private val repository: ScheduleRepository
 ){
-    suspend fun invoke(): Schedule {
-        return repository.getSchedule()
+    suspend fun invoke(fromCode: String, toCode: String): Schedule {
+        return repository.getSchedule(fromCode, toCode)
     }
-
 }

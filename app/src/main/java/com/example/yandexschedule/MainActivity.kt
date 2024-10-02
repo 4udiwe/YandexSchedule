@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.yandexschedule.ui.screens.MainScreen
 import com.example.yandexschedule.ui.theme.YandexScheduleTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
             YandexScheduleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     innerPadding
-
+                    MainScreen(vm = vm, owner = this, paddingValues = innerPadding)
 
                 }
             }

@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val appModule = module {
     viewModel<ScheduleViewModel> {
-        ScheduleViewModel(getSchedule = get())
+        ScheduleViewModel(getSchedule = get(), getSuggestions = get())
     }
 }
