@@ -7,8 +7,8 @@ import com.example.domain.repository.ScheduleRepository
 class ScheduleRepositoryImpl(
     private val api : ScheduleAPI
 ) : ScheduleRepository {
-    override suspend fun getSchedule(fromCode: String, toCode: String): Schedule {
-        return api.get(from = fromCode, to = toCode).toDomain()
+    override suspend fun getSchedule(fromCode: String, toCode: String, transport: String, date: String): Schedule {
+        return api.get(from = fromCode, to = toCode, transport = transport, date = date).toDomain()
     }
 
 }

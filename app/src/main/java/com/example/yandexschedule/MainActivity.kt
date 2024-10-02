@@ -24,9 +24,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             YandexScheduleTheme {
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    innerPadding
-                    MainScreen(vm = vm, owner = this, paddingValues = innerPadding)
+                    MainScreen(
+                        vm = vm, owner = this, paddingValues = innerPadding
+                    )
 
                 }
             }
