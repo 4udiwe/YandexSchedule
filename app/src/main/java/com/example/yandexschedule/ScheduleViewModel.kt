@@ -23,7 +23,7 @@ class ScheduleViewModel(
     val schedule: LiveData<Schedule> = innerSchedule
 
 
-    fun getSchedule(from: String, to: String, transportStateValue: List<Boolean>, dateStateValue: List<Boolean>, otherDate: Date? = null) = viewModelScope.launch {
+    fun getSchedule(from: String, to: String, transportStateValue: List<Boolean>, dateStateValue: List<Boolean>, otherDate: String? = null) = viewModelScope.launch {
         val fromCodeSuggestions = viewModelScope.async { getStationSuggests(city = from)}
         val toCodeSuggestions = viewModelScope.async { getStationSuggests(city = to)}
 
@@ -34,24 +34,34 @@ class ScheduleViewModel(
         else if (transportStateValue[3]) "train"
         else "bus"
 
-        val stringDate = Date().toString()
-        val searchDate = "${stringDate.takeLast(4)}-${
-            when (stringDate.substring(4, 7)){
-                "Jan" -> "01"
-                "Feb" -> "02"
-                "Mar" -> "03"
-                "Apr" -> "04"
-                "May" -> "05"
-                "Jun" -> "06"
-                "Jul" -> "07"
-                "Aug" -> "08"
-                "Sep" -> "09"
-                "Oct" -> "10"
-                "Nov" -> "11"
-                "Dec" -> "12"
-                else -> {"01"}
+
+        val searchDate =
+            if (otherDate != null && dateStateValue[2])
+                otherDate
+            else {
+                val stringDate = Date().toString()
+
+                "${stringDate.takeLast(4)}-${
+                    when (stringDate.substring(4, 7)) {
+                        "Jan" -> "01"
+                        "Feb" -> "02"
+                        "Mar" -> "03"
+                        "Apr" -> "04"
+                        "May" -> "05"
+                        "Jun" -> "06"
+                        "Jul" -> "07"
+                        "Aug" -> "08"
+                        "Sep" -> "09"
+                        "Oct" -> "10"
+                        "Nov" -> "11"
+                        "Dec" -> "12"
+                        else -> "01"
+                    }
+                }-${
+                    if (dateStateValue[1]) (stringDate.substring(8, 10)
+                        .toInt() + 1).toString() else stringDate.substring(8, 10)
+                }"
             }
-        }-${ if(dateStateValue[1]) (stringDate.substring(8, 10).toInt() + 1).toString() else stringDate.substring(8, 10)}"
 
 
 

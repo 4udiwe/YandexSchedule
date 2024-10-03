@@ -1,5 +1,7 @@
 package com.example.yandexschedule.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,11 +20,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,14 +42,37 @@ import com.example.domain.model.Schedule
 import com.example.domain.model.Segments
 import com.example.yandexschedule.R
 import com.example.yandexschedule.ScheduleViewModel
+import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarConfig
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import java.time.LocalDate
+import java.util.Date
 
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     vm: ScheduleViewModel,
     owner: LifecycleOwner,
     paddingValues: PaddingValues
 ) {
+    val calendarState = rememberSheetState()
+
+    val pickedDate: MutableState<String?> = remember {
+        mutableStateOf(null)
+    }
+
+    CalendarDialog(
+        state = calendarState,
+        selection = CalendarSelection.Date { date ->
+            pickedDate.value = "${date.year}-${date.monthValue}-${date.dayOfMonth}"
+        }
+    )
+
+
+
     val from = remember {
         mutableStateOf("")
     }
@@ -194,6 +221,7 @@ fun MainScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         dateState.value = listOf(false, false, true)
+                        calendarState.show()
                     },
                     colors =
                     if (dateState.value[2])
@@ -212,7 +240,10 @@ fun MainScreen(
                         ),
                     shape = CutCornerShape(0.dp)
                 ) {
-                    Text(text = "Дата")
+                    Text(text = pickedDate.value?.substring(5)?.replace(
+                        '-',
+                        '.'
+                    ) ?: "Дата", maxLines = 1)
                 }
             }
 
@@ -351,7 +382,8 @@ fun MainScreen(
                         from = from.value,
                         to = where.value,
                         transportStateValue = transportState.value,
-                        dateStateValue = dateState.value
+                        dateStateValue = dateState.value,
+                        otherDate = pickedDate.value
                     )
                 },
                 shape = RoundedCornerShape(4.dp),
